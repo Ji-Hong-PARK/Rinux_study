@@ -1,0 +1,92 @@
+리눅스 기본명령어 5번문제  답안
+
+/////////문제5
+1-1 mkdir /backup
+1-2 한번에 복사하기 하는 방법.
+# cp /etc/login.defs /etc/inittab /boot/grub2/grub.cfg /backup
+
+
+
+//////////////////////////////////////////////
+
+
+[root@localhost final]#
+[root@localhost final]# mkdir /backup
+
+[root@localhost final]# cp /etc/login.defs /etc/inittab /bckup
+
+[root@localhost final]# ls -l /backup
+합계 16
+-rw-r--r--. 1 root root 4291  9월 28 14:47 grub.cfg
+-rw-r--r--. 1 root root  511  9월 28 14:47 inittab
+-rw-r--r--. 1 root root 2027  9월 28 14:47 login.defs
+
+////////////////////////////////////////////////////////
+
+2번문제 3개의 파일  /backup/test 디렉토리에 각각 이름변경해서 복사하기
+
+
+[root@localhost final]# cd /backup
+
+[root@localhost backup]# mkdir /backup/test  /// test파일 생성
+
+[root@localhost backup]# cp /backup/login.defs /backup/test/login
+
+
+[root@localhost backup]# cp /backup/login.defs /backup/test/login
+
+[root@localhost backup]# cp /backup/inittab /backup/test/init
+
+
+[root@localhost backup]# cp /backup/grub.cfg /backup/test/grub
+
+-----/backup에 있는 3개의 복사파일을 test파일안에 이름바꾸어 넣기
+////////////////////////////////////////
+		
+
+/////////////문제 3번 
+////////backup 에 있는 test1이라는 파일, backup/test에 test2라는 파일을 한줄 명령어로 생성
+
+[root@localhost backup]# mkdir /backup/test1/ /backup/test/test2
+ 중간에 띄어쓰기로 test2파일을 생성한다.
+-----------------------
+
+[root@localhost backup]# touch /backup/test1 /backup/test/
+
+////////////////////////////////////////////////////////////
+
+[root@localhost backup]# mkdir -p /home/test/c/d
+
+[root@localhost backup]# cp -rp /backup/test /home/test/c/
+[root@localhost backup]#
+
+[root@localhost backup]# cd /home
+
+[root@localhost home]# ls -l /backup
+합계 16
+-rw-r--r--. 1 root root 4291  9월 28 14:47 grub.cfg
+-rw-r--r--. 1 root root  511  9월 28 14:47 inittab
+-rw-r--r--. 1 root root 2027  9월 28 14:47 login.defs
+drwxr-xr-x. 2 root root   56  9월 28 15:06 test
+-rw-r--r--. 1 root root    0  9월 28 15:06 test1
+
+
+
+
+
+[root@localhost home]# cp /backup/grub.cfg /backup/inittab
+> /home/test/c/d/linux
+
+[root@localhost home]#
+
+[root@localhost home]# ls -l /home/test/c/d/linux
+합계 32
+-rw-r--r--. 1 root root 4291  9월 28 14:50 frub
+-rw-r--r--. 1 root root 4291  9월 28 15:12 grub.cfg
+-rw-r--r--. 1 root root  511  9월 28 14:50 init
+-rw-r--r--. 1 root root  511  9월 28 15:12 inittab
+-rw-r--r--. 1 root root 2027  9월 28 14:50 login
+-rw-r--r--. 1 root root 2027  9월 28 15:12 login.defs
+-rw-r--r--. 1 root root    0  9월 28 15:06 test2
+
+[root@localhost home]#

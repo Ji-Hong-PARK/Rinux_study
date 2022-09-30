@@ -1,0 +1,30 @@
+리눅스 기본명령어  4번 문제   답안
+
+
+login as: root
+root@192.168.10.10's password:
+Access denied
+root@192.168.10.10's password:
+Access denied
+root@192.168.10.10's password:
+Access denied
+root@192.168.10.10's password:
+Last login: Wed Sep 28 18:17:49 2022
+[root@localhost ~]# mkdir /final
+[root@localhost ~]# cd /final
+[root@localhost final]# touch 12 34 56
+[root@localhost final]# touch -t 199901011200 /final/34
+[root@localhost final]# ls -l /final
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 14:42 12
+-rw-r--r--. 1 root root 0  1월  1  1999 34
+-rw-r--r--. 1 root root 0  9월 28 14:42 56
+[root@localhost final]# mkdir /back
+[root@localhost final]# cp /final/12 /final/56 /back
+[root@localhost final]# cp -p /final/34 /back/34
+[root@localhost final]# ls -l /back
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 14:43 12
+-rw-r--r--. 1 root root 0  1월  1  1999 34
+-rw-r--r--. 1 root root 0  9월 28 14:43 56
+[root@localhost final]#

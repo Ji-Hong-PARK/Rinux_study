@@ -1,0 +1,230 @@
+출력문제 6번  1 ~ 5번 문제 나오고 5번도 나옴.(모듈에서)
+대신 실기시험에서는 1~4번 나옴
+
+creal   //////////////////////////////////////  단축키 컨트롤 + "L"
+
+
+
+아래꺼는  선생님이랑 같이 쳣던 명령어 
+
+-------------mv  / rs  명령어---------------------------------
+
+
+[root@localhost home]# mkdir /mvfile /mvtest
+[root@localhost home]# cd /mvfile
+[root@localhost mvfile]# touch 1 2 3 4
+[root@localhost mvfile]# mkdir a b c
+[root@localhost mvfile]# cd /mvtest
+[root@localhost mvtest]# ls -l /mvfile
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 15:17 1
+-rw-r--r--. 1 root root 0  9월 28 15:17 2
+-rw-r--r--. 1 root root 0  9월 28 15:17 3
+-rw-r--r--. 1 root root 0  9월 28 15:17 4
+drwxr-xr-x. 2 root root 6  9월 28 15:17 a
+drwxr-xr-x. 2 root root 6  9월 28 15:17 b
+drwxr-xr-x. 2 root root 6  9월 28 15:17 c
+[root@localhost mvtest]#
+[root@localhost mvtest]# ls -l /mvtest
+합계 0
+[root@localhost mvtest]#
+[root@localhost mvtest]# mv /mvfile/1 /mvtest/1
+[root@localhost mvtest]# ls -l /mvfile /mvtest
+/mvfile:
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 15:17 2
+-rw-r--r--. 1 root root 0  9월 28 15:17 3
+-rw-r--r--. 1 root root 0  9월 28 15:17 4
+drwxr-xr-x. 2 root root 6  9월 28 15:17 a
+drwxr-xr-x. 2 root root 6  9월 28 15:17 b
+drwxr-xr-x. 2 root root 6  9월 28 15:17 c
+
+/mvtest:
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 15:17 1
+[root@localhost mvtest]#
+[root@localhost mvtest]#
+[root@localhost mvtest]# mv /mvfile/2 /mvtest
+[root@localhost mvtest]# ls -1 /mvfile /mvtest
+/mvfile:
+3
+4
+a
+b
+c
+
+/mvtest:
+1
+2
+[root@localhost mvtest]# ls -1 /mvfile /mvtest
+/mvfile:
+3
+4
+a
+b
+c
+
+/mvtest:
+1
+2
+[root@localhost mvtest]# mv /mvfile/3 /mvfile/a /mvtest
+[root@localhost mvtest]# ls -1 /mvfile /mvtest
+/mvfile:
+4
+b
+c
+
+/mvtest:
+1
+2
+3
+a
+[root@localhost mvtest]# ls -1 /mvfile /mvtest
+/mvfile:
+4
+b
+c
+
+/mvtest:
+1
+2
+3
+a
+[root@localhost mvtest]# mv /mvfile/4 /mvtest/sa
+[root@localhost mvtest]# ls -1 /mvfile /mvtest
+/mvfile:
+b
+c
+
+/mvtest:
+1
+2
+3
+a
+sa
+[root@localhost mvtest]# rm 1
+rm: remove 일반 빈 파일 `1'? y
+[root@localhost mvtest]# ls -l
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 15:17 2
+-rw-r--r--. 1 root root 0  9월 28 15:17 3
+drwxr-xr-x. 2 root root 6  9월 28 15:17 a
+-rw-r--r--. 1 root root 0  9월 28 15:17 sa
+[root@localhost mvtest]# rm a
+rm: cannot remove `a': 디렉터리입니다
+[root@localhost mvtest]# rm a
+rm: cannot remove `a': 디렉터리입니다
+[root@localhost mvtest]# rm a
+rm: cannot remove `a': 디렉터리입니다
+[root@localhost mvtest]# rm -r a
+rm: remove 디렉토리 `a'? y
+[root@localhost mvtest]# ls -l
+합계 0
+-rw-r--r--. 1 root root 0  9월 28 15:17 2
+-rw-r--r--. 1 root root 0  9월 28 15:17 3
+-rw-r--r--. 1 root root 0  9월 28 15:17 sa
+[root@localhost mvtest]# rm -f 2
+[root@localhost mvtest]# rm -rf 3 sa
+[root@localhost mvtest]# ls -l
+합계 0
+[root@localhost mvtest]#
+
+
+----------------------------------------출력  명령어 ------------------------
+
+
+
+ cat /etc/passwd : 전체 문서 출력
+ head -10 /etc/passw : 위에서부터 10줄만 출력
+ cat -n /etc/passwd : 행번호를 알수있음
+ more /etc/passwd : 화면창에 맞추어 출력  - 출력된후 스페이스바는 쪽 / 엔터는 행단위 나가기는Q
+ tail /etc/passwd : 마지막 문장 10칸에 맞추어 출력
+ tail -5 /etc/passwd : 10칸이 아닌 5칸에 맞추어 출력
+
+ more -5 /etc/passwd 를 치면 5줄씩  볼수있다. 화면에 안맞추고.
+
+----------------------------------시간 타임 명령어 예제문제 5번 중요합니다.
+
+
+출력 문제 6번   풀이 
+
+1)
+mkdir /output
+cp /etc/passwd /etc/inittab /etc/login.defs /output
+
+2)
+head -5 /output/login.defs
+
+3)
+tail -5 /output/inittab
+
+4)
+more /output/passwd
+
+5)
+cat -n /output/passwd
+
+큰5번 답안 find명령어!!!! 아직 안배움!
+
+-
+
+
+////////////////////////6일차 특수문자///////////////////////////////
+-리다이렉션 3-1 예제
+
+-내가 원하는 방향으로 출력한다..
+
+
+cat 만 치면  에코 기능을 가진다
+
+끌려면  컨트로 + C
+
+
+
+
+[root@localhost ~]#
+[root@localhost ~]# mkdir /retest
+[root@localhost ~]# cd /retest
+[root@localhost retest]# pwd
+/retest
+[root@localhost retest]# cat
+Hello World
+Hello World
+TEST
+TEST
+^C
+[root@localhost retest]# cat > /retest/a
+Hello World
+TEST
+^C
+[root@localhost retest]# ls -al /home/user0
+합계 12
+drwx------. 3 user0 user0  78  9월 28 02:30 .
+drwxr-xr-x. 4 root  root   31  9월 28 15:09 ..
+-rw-r--r--. 1 user0 user0  18  4월  1  2020 .bash_logout
+-rw-r--r--. 1 user0 user0 193  4월  1  2020 .bash_profile
+-rw-r--r--. 1 user0 user0 231  4월  1  2020 .bashrc
+drwxr-xr-x. 4 user0 user0  39  9월 28 02:29 .mozilla
+[root@localhost retest]# ls -al /home/user0 > /retest/b
+[root@localhost retest]# cat /retest/b
+합계 12
+drwx------. 3 user0 user0  78  9월 28 02:30 .
+drwxr-xr-x. 4 root  root   31  9월 28 15:09 ..
+-rw-r--r--. 1 user0 user0  18  4월  1  2020 .bash_logout
+-rw-r--r--. 1 user0 user0 193  4월  1  2020 .bash_profile
+-rw-r--r--. 1 user0 user0 231  4월  1  2020 .bashrc
+drwxr-xr-x. 4 user0 user0  39  9월 28 02:29 .mozilla
+[root@localhost retest]#
+[root@localhost retest]#
+[root@localhost retest]#
+[root@localhost retest]# echo "TEST"
+TEST
+[root@localhost retest]# echo "TEST" > /retest/b
+[root@localhost retest]# echo "TEST" >> /retest/b
+[root@localhost retest]#
+
+
+
+
+
+

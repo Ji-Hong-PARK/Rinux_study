@@ -1,0 +1,326 @@
+계정 : 인증과 권한부여의 도구
+      인가의 도구
+
+리눅스 계정 관련 파일
+
+계정생성시 적용되는 규칙 저장				계정 정보 저장
+etc/login.defs	  /etc/default/useradd		/etc/passwd
+보안 관련		   경로 관련 설정			-계정 기본정보(ID,UID,PATH,PW 정책)
+ 
+ pw길이						
+ 
+ pw 만료일           계정의 기본홈경로			/etc/shadow
+ pw 암호화	   계정의 Skel 경로			-암호화된 패스워드
+ ...	   	   ...
+						/etc/group
+						-그룹계정 정보
+						
+		   HOME=/home			/home/사용자ID
+						/var/spool/mail/사용자ID
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+[root@localhost ~]# useradd user10
+[root@localhost ~]# tail /-3 /etc/passwd
+tail: cannot open `/-3' for reading: 그런 파일이나 디렉터리가 없습니다
+==> /etc/passwd <==
+gdm:x:42:42::/var/lib/gdm:/sbin/nologin
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+gnome-initial-setup:x:988:982::/run/gnome-initial-setup/:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+avahi:x:70:70:Avahi mDNS/DNS-SD Stack:/var/run/avahi-daemon:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+user0:x:1000:1000:USER0:/home/user0:/bin/bash
+user10:x:1001:1001::/home/user10:/bin/bash
+[root@localhost ~]# tail -3 /etc/passwd
+tcpdump:x:72:72::/:/sbin/nologin
+user0:x:1000:1000:USER0:/home/user0:/bin/bash
+user10:x:1001:1001::/home/user10:/bin/bash
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]# passwd user10
+user10 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 암호가 앞뒤 어느쪽에서 읽어도 같은 문맥임
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+[root@localhost ~]#
+[root@localhost ~]# tail -3 /etc/passwd
+tcpdump:x:72:72::/:/sbin/nologin
+user0:x:1000:1000:USER0:/home/user0:/bin/bash
+user10:x:1001:1001::/home/user10:/bin/bash
+[root@localhost ~]# tail -3 /etc/shadow
+tcpdump:!!:19262::::::
+user0:$6$1oYOH.DILb8W//Tw$HiFR.hcWMBwysBhORdKr.pKNzCKuTjGpjJLJ.C6MRMDW15qxI3rBGbonAxfclIbIXu24dvBfx6gEP8Q4.uCOC1::0:99999:7:::
+user10:$6$gugYf502$stqxVdYnkG8gsM2o3Y8ebtnYozZWQvhIvY427zY1BR3RVrSTXzt.niC2YZ90.3N8gIDRk3abr6IrqRbPGj2kr.:19264:0:99999:7:::
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]# tail -3 /etc/group
+tcpdump:x:72:
+user0:x:1000:user0
+user10:x:1001:
+[root@localhost ~]#
+[root@localhost ~]# ls -l /home
+합계 0
+drwx------. 3 user0  user0  78  9월 28 02:30 user0
+drwx------. 3 user10 user10 78  9월 29 14:00 user10
+[root@localhost ~]# ls -al /home/user10
+합계 12
+drwx------. 3 user10 user10  78  9월 29 14:00 .
+drwxr-xr-x. 4 root   root    33  9월 29 14:00 ..
+-rw-r--r--. 1 user10 user10  18  4월  1  2020 .bash_logout
+-rw-r--r--. 1 user10 user10 193  4월  1  2020 .bash_profile
+-rw-r--r--. 1 user10 user10 231  4월  1  2020 .bashrc
+drwxr-xr-x. 4 user10 user10  39  9월 28 02:29 .mozilla
+[root@localhost ~]# ls -al /etc/skel
+합계 24
+drwxr-xr-x.   3 root root   78  9월 28 02:30 .
+drwxr-xr-x. 144 root root 8192  9월 29 14:02 ..
+-rw-r--r--.   1 root root   18  4월  1  2020 .bash_logout
+-rw-r--r--.   1 root root  193  4월  1  2020 .bash_profile
+-rw-r--r--.   1 root root  231  4월  1  2020 .bashrc
+drwxr-xr-x.   4 root root   39  9월 28 02:29 .mozilla
+[root@localhost ~]# ls -l /var/spool/mail
+합계 0
+-rw-rw----. 1 rpc    mail 0  9월 28 02:32 rpc
+-rw-rw----. 1 user0  mail 0  9월 28 02:39 user0
+-rw-rw----. 1 user10 mail 0  9월 29 14:00 user10
+
+
+
+
+
+[root@localhost ~]# useradd -u 2000 test2
+[root@localhost ~]# tail -2 /etc/passwd
+user10:x:1001:1001::/home/user10:/bin/bash
+test2:x:2000:2000::/home/test2:/bin/bash
+[root@localhost ~]# id test2
+uid=2000(test2) gid=2000(test2) groups=2000(test2)
+[root@localhost ~]#
+
+
+[root@localhost ~]# useradd -g test2 test3
+[root@localhost ~]# tail -2 /etc/passwd
+test2:x:2000:2000::/home/test2:/bin/bash
+test3:x:2001:2000::/home/test3:/bin/bash
+[root@localhost ~]#
+[root@localhost ~]# id test3
+uid=2001(test3) gid=2000(test2) groups=2000(test2)
+[root@localhost ~]#
+
+
+[root@localhost ~]# useradd -G test2 test4
+[root@localhost ~]# tail -2 /etc/passwd
+test3:x:2001:2000::/home/test3:/bin/bash
+test4:x:2002:2002::/home/test4:/bin/bash
+[root@localhost ~]# id test4
+uid=2002(test4) gid=2002(test4) groups=2002(test4),2000(test2)
+[root@localhost ~]#
+
+
+
+[root@localhost ~]# useradd -c FTPService test5
+[root@localhost ~]# tail -2 /etc/passwd
+test4:x:2002:2002::/home/test4:/bin/bash
+test5:x:2003:2003:FTPService:/home/test5:/bin/bash
+[root@localhost ~]#
+[root@localhost ~]# ls -l /home
+합계 0
+drwx------. 3 test2  test2  78  9월 29 14:07 test2
+drwx------. 3 test3  test2  78  9월 29 14:09 test3
+drwx------. 3 test4  test4  78  9월 29 14:11 test4
+drwx------. 3 test5  test5  78  9월 29 14:12 test5
+drwx------. 3 user0  user0  78  9월 28 02:30 user0
+drwx------. 3 user10 user10 78  9월 29 14:00 user10
+
+[root@localhost ~]# cat /etc/default/useradd
+
+# useradd defaults file
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=yes
+
+///////////미니문제  4번 을 푸는 법 ///////////////////
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+[root@localhost ~]# mkdir -p /export/home
+[root@localhost ~]# useradd -d /export/home/test6 test6
+[root@localhost ~]# tail -2 /etc/passwd
+test5:x:2003:2003:FTPService:/home/test5:/bin/bash
+test6:x:2004:2004::/export/home/test6:/bin/bash
+[root@localhost ~]# tail -5 /etc/passwd
+test2:x:2000:2000::/home/test2:/bin/bash
+test3:x:2001:2000::/home/test3:/bin/bash
+test4:x:2002:2002::/home/test4:/bin/bash
+test5:x:2003:2003:FTPService:/home/test5:/bin/bash
+test6:x:2004:2004::/export/home/test6:/bin/bash
+
+[root@localhost ~]# ls -l /home
+합계 0
+drwx------. 3 test2  test2  78  9월 29 14:07 test2
+drwx------. 3 test3  test2  78  9월 29 14:09 test3
+drwx------. 3 test4  test4  78  9월 29 14:11 test4
+drwx------. 3 test5  test5  78  9월 29 14:12 test5
+drwx------. 3 user0  user0  78  9월 28 02:30 user0
+drwx------. 3 user10 user10 78  9월 29 14:00 user10
+[root@localhost ~]# ;s -l /export/home
+-bash: syntax error near unexpected token `;'
+
+
+[root@localhost ~]# ls -l /export/home
+합계 0
+drwx------. 3 test6 test6 78  9월 29 14:16 test6
+
+
+
+10일차 리눅스  계정에서  예제3번   3페이지 유저생성4 시험문제
+
+useradd -d /export/home/test6 test6  <-마지막에 test6 적기!!!! 안저긍면 감정 
+
+
+
+//////////////////////////////////////////////////////////
+미니문제 5번  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓푸는법
+
+[root@localhost ~]# cp -r /etc/skel /copyskeldir
+[root@localhost ~]# cd /copyskeldir
+[root@localhost copyskeldir]# ls -al
+합계 12
+drwxr-xr-x.  3 root root  78  9월 29 14:19 .
+dr-xr-xr-x. 19 root root 257  9월 29 14:19 ..
+-rw-r--r--.  1 root root  18  9월 29 14:19 .bash_logout
+-rw-r--r--.  1 root root 193  9월 29 14:19 .bash_profile
+-rw-r--r--.  1 root root 231  9월 29 14:19 .bashrc
+drwxr-xr-x.  4 root root  39  9월 29 14:19 .mozilla
+[root@localhost copyskeldir]# touch a b c d index.html
+[root@localhost copyskeldir]# ls -al
+합계 12
+drwxr-xr-x.  3 root root 132  9월 29 14:20 .
+dr-xr-xr-x. 19 root root 257  9월 29 14:19 ..
+-rw-r--r--.  1 root root  18  9월 29 14:19 .bash_logout
+-rw-r--r--.  1 root root 193  9월 29 14:19 .bash_profile
+-rw-r--r--.  1 root root 231  9월 29 14:19 .bashrc
+drwxr-xr-x.  4 root root  39  9월 29 14:19 .mozilla
+-rw-r--r--.  1 root root   0  9월 29 14:20 a
+-rw-r--r--.  1 root root   0  9월 29 14:20 b
+-rw-r--r--.  1 root root   0  9월 29 14:20 c
+-rw-r--r--.  1 root root   0  9월 29 14:20 d
+-rw-r--r--.  1 root root   0  9월 29 14:20 index.html
+
+//////////////////////////
+
+[root@localhost copyskeldir]# useradd -mk /copyskeldir test7
+[root@localhost copyskeldir]# cd ~test7
+[root@localhost test7]# ls -al
+합계 12
+drwx------. 3 test7 test7 132  9월 29 14:21 .
+drwxr-xr-x. 9 root  root   98  9월 29 14:21 ..
+-rw-r--r--. 1 test7 test7  18  9월 29 14:19 .bash_logout
+-rw-r--r--. 1 test7 test7 193  9월 29 14:19 .bash_profile
+-rw-r--r--. 1 test7 test7 231  9월 29 14:19 .bashrc
+drwxr-xr-x. 4 test7 test7  39  9월 29 14:19 .mozilla
+-rw-r--r--. 1 test7 test7   0  9월 29 14:20 a
+-rw-r--r--. 1 test7 test7   0  9월 29 14:20 b
+-rw-r--r--. 1 test7 test7   0  9월 29 14:20 c
+-rw-r--r--. 1 test7 test7   0  9월 29 14:20 d
+-rw-r--r--. 1 test7 test7   0  9월 29 14:20 index.html
+[root@localhost test7]#
+
+[root@localhost test7]# tail -2 /etc/passwd
+test6:x:2004:2004::/export/home/test6:/bin/bash
+test7:x:2005:2005::/home/test7:/bin/bash
+
+
+
+[root@localhost test7]# useradd -s /bin/ksh test9
+[root@localhost test7]# tail -2 /etc/passwd
+test7:x:2005:2005::/home/test7:/bin/bash
+test9:x:2006:2006::/home/test9:/bin/ksh
+[root@localhost test7]# useradd -u 1010 -g test2 -G test9 -c TEST -s /bin/ksh -d /export/home/test8 test8
+
+[root@localhost test7]# id test8
+uid=1010(test8) gid=2000(test2) groups=2000(test2),2006(test9)
+[root@localhost test7]# tail -2 /etc/passwd
+test9:x:2006:2006::/home/test9:/bin/ksh
+test8:x:1010:2000:TEST:/export/home/test8:/bin/ksh
+
+
+
+
+미니문제 풀이 (내부평가 문제풀이)
+
+[root@localhost ~]# useradd -u 1800 test10
+[root@localhost ~]# useradd -g test10 test20
+[root@localhost ~]# useradd -G test10 test30
+[root@localhost ~]# rm -rf /export
+[root@localhost ~]# mkdir /export
+[root@localhost ~]# useradd -d /export/test40 test40
+[root@localhost ~]# cp -r /etc/skel /skel2
+[root@localhost ~]# ls -al /skel2
+합계 12
+drwxr-xr-x.  3 root root  78  9월 29 15:30 .
+dr-xr-xr-x. 19 root root 251  9월 29 15:30 ..
+-rw-r--r--.  1 root root  18  9월 29 15:30 .bash_logout
+-rw-r--r--.  1 root root 193  9월 29 15:30 .bash_profile
+-rw-r--r--.  1 root root 231  9월 29 15:30 .bashrc
+drwxr-xr-x.  4 root root  39  9월 29 15:30 .mozilla
+[root@localhost ~]#
+[root@localhost ~]# touch /skel2/test50
+[root@localhost ~]# useradd -mk /skel2 test50
+[root@localhost ~]# useradd -s /bin/ksh test60
+[root@localhost ~]#
+
+
+///////////////////////////////////////////////////////
+
+
+프로세스
+
+
+Process
+:프로그램을 실행한 상태
+
+PID
+:프로세스 구분을 위해 부여되는 번호
+
+PS
+:
+
+내부시험  리눅스 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+문제 내용 ( 공부할것!)
+
+파일명령어
+- cp
+- cat/head/tail/more
+
+리다이렉션
+- >
+
+권한
+- 허가권 / 소유권
+
+계정
+- 계정 생성
+
+프로세스관리
+- nice
+
+
+
+
+
+

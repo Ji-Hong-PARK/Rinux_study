@@ -1,0 +1,15 @@
+리눅스  다운 받기
+
+centos 에서 다운받기 -http://mirror.kakao.com/centos/7.9.2009/isos/x86_64/ 다운
+-CentOS-7-x86_64-DVD-2009.iso 다운  -> 
+
+
+------------
+
+vm웨어 워크스테이션 다운받기.
+	- 가상 컴퓨터 머신으로 os를 하나더 깔수있게 한다.
+
+vmware workstation 16 pro download
+
+
+vmware 16 license key 2022  구글에서 쳐서  키 받기. (편법)

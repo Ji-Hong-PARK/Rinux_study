@@ -1,0 +1,194 @@
+문제 풀이  따라 적기!!!!!!!!!!
+
+
+
+////////////////////문제 3 권한 주기///////////////////////
+chown {소유권자}:{그룹식별자} {소유권을 변경하고 싶은 파일명}
+ex)chown aaa:bbb test.sh
+
+chown {소유권자}:{그룹식별자} {소유권을 변경하고 싶은 디렉토리명}
+ex)chown aaa:bbb /home/test
+
+chmod [option (ex.744)] [변경할 파일 위치/이름]
+1.권한은 숫자로 표현되며 읽기(4), 쓰기(2), 실행(1)으로 나뉜다.
+2.읽고쓰기=4+2=6, 읽고실행=4+1=5, 쓰고실행=2+1=3, 읽고쓰고실행=4+2+1=7
+3.권한은 총 3구역으로 설정되며, 나 / 내가 속한 그룹 / 다른 그룹 으로 나뉜다.
+4.나는 읽고 / 내가 속한 그룹은 쓰고 / 다른 그룹은 실행 = 421
+
+touch [파일명]
+/backup에 2와 3이라 파일 생성, /test에 1이라는 파일 생성한다.
+ex)touch /backup/2 3 /test 1
+
+
+문제
+	- user10,user20,user30 생성상태에서 진행
+
+
+[root@localhost ~]# useradd user10
+[root@localhost ~]# useradd user20
+[root@localhost ~]# useradd user30
+[root@localhost ~]# passwd user10
+user10 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 암호가 앞뒤 어느쪽에서 읽어도 같은 문맥임
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+[root@localhost ~]# passwd user20
+user20 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 암호가 앞뒤 어느쪽에서 읽어도 같은 문맥임
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+[root@localhost ~]# passwd user30
+user30 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 암호가 앞뒤 어느쪽에서 읽어도 같은 문맥임
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+
+
+문제1) /perm 디렉토리 생성
+
+	-[root@localhost ~]# mkdir /perm
+
+문제2) /perm 소유자 계정 user30, 소유그룹 계정 user20으로 소유권변경
+
+	-[root@localhost ~]# chown user30:user20 /perm
+
+문제3) /perm디렉토리에 user10은 접근가능,목록보기가능,파일생성불가 허가권부여
+문제4) /perm디렉토리에 user20은 접근가능,목록보기불가,파일생성가능 허가권부여
+문제5) /perm디렉토리에 user30은 접근불가,목록보기불가,파일생성불가 허가권부여
+
+//////////////////    ___wxr_x  : 035    /////////////////
+
+user10 접근O 목록보기O 파일생성X : r_x : 5
+user20 접근X 목록보기X 파일생성O : _wx : 3
+user30 접근X 목록보기X 파일생성X : ___ : 0
+
+//////////////////////////////////////////////////////////
+
+	-[root@localhost ~]# chmod 035 /perm
+	-[root@localhost ~]# ls -l /perm
+		합계 0
+		[root@localhost ~]# ls -dl /perm
+		drwxr-xr-x. 2 35 user20 6  9월 29 12:16 /perm
+
+문제6) /perm 디렉토리에 user30이 test파일을 만들고 그안에 'testfile'내용저장
+
+///////////////여기서  유저 30번으로 들어간다///////////////////
+///////////////////터미널을 추가로 열어서 ////////////////////
+
+	- login as: user30
+	- user30@192.168.10.10's password:
+	- [user30@localhost ~]$ cd /perm
+		-bash: cd: /perm: 허가 거부
+	- [user30@localhost ~]$ chmod u=rwx /perm
+	- [user30@localhost ~]$ cd /perm
+	- [user30@localhost perm]$ cat > test
+		testfile
+		^C(컨트롤 + 'C'누르면 된다.)
+	- [user30@localhost perm]$
+
+문제7) user30계정으로 /perm/test의 파일을 허가 범위를 다음과같이 지정
+-user30:읽기,쓰기 가능, user20:읽기불가 쓰기가능, 나머지계정:읽기가능 쓰기 불가.
+
+/////////////다시 root 계정창으로 돌아간다 //////////////////
+
+	- [root@localhost ~]# chown .user20 /perm/test
+	- [root@localhost ~]# ls -l /perm
+		합계 4
+		-rw-rw-r--. 1 user30 user20 9  9월 29 13:37 test
+
+	- [root@localhost ~]# chmod u=rw,g=w,o=r /perm/test
+	- [root@localhost ~]# ls -l /perm
+		합계 4
+		-rw--w-r--. 1 user30 user20 9  9월 29 13:37 test
+
+	- [root@localhost ~]# chmod 624 /perm/test
+	- [root@localhost ~]# ls -l /perm
+		합계 4
+		-rw--w-r--. 1 user30 user20 9  9월 29 13:37 test
+
+///////////////////////////////////////////////////////
+////////////////////문제 3 권한 끝///////////////////////
+
+
+
+//////////////////특수문자 리다렉션 문제///////////////////
+/////////////리다이렉션 미니 문제 풀이//////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+
+
+
+///////////////사용자 계정생성 미니 문제/////////////////////
+
+1)문제 test10 계정 생성시 UID 값 1800으로 지정
+	- [root@localhost ~]# useradd -u 1800 test10
+
+2)문제 test20 계정생성시 주그룹을 test10으로 지정
+	- [root@localhost ~]# useradd -g test10 test20
+
+3)문제 test30 계정생성시 보조그룹 test10 추가
+	- [root@localhost ~]# useradd -G test10 test30
+
+4)문제 test40 계정생성시 홈디렉토리 경로를 /export/test40으로 지정
+	- [root@localhost ~]# rm -rf /export
+	- [root@localhost ~]# mkdir /export
+	- [root@localhost ~]# useradd -d /export/test40 test40
+
+5)문제 test50 계정생성시 스컬경로를 /skel2로 하고 test50 홈디렉토리에
+	test50파일이 생성되도록 하세요
+	- [root@localhost ~]# cp -r /etc/skel /skel2
+	- [root@localhost ~]# ls -al /skel2
+		합계 12
+		drwxr-xr-x.  3 root root  78  9월 29 15:30 .
+		dr-xr-xr-x. 19 root root 251  9월 29 15:30 ..
+		-rw-r--r--.  1 root root  18  9월 29 15:30 .bash_logout
+		-rw-r--r--.  1 root root 193  9월 29 15:30 .bash_profile
+		-rw-r--r--.  1 root root 231  9월 29 15:30 .bashrc
+		drwxr-xr-x.  4 root root  39  9월 29 15:30 .mozilla
+	- [root@localhost ~]#
+	- [root@localhost ~]# touch /skel2/test50
+	- [root@localhost ~]# useradd -mk /skel2 test50
+
+6)문제 test60 계정 생성시 쉘을 /bin/ksh 로 설정
+	- [root@localhost ~]# useradd -s /bin/ksh test60
+	- [root@localhost ~]#
+
+
+///////////////////////////////////////////////////////////
+//////////////////계정 생성 미니문제 풀이 끝 ///////////////////
+
+
+
+
+
+//////////////////////////////////////////////////////
+/////////////////////내부평가 nice 문제//////////////////////
+
+[root@localhost ~]# nice -n -20 ping 127.0.0.1
+
+
+
+터미널을 하나 더열어서!!!
+
+[root@localhost ~]# ps -elf
+
+
+
+
+
+
+

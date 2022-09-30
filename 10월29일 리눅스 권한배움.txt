@@ -1,0 +1,404 @@
+리눅스 권한 
+-리다렉션
+
+mkdir
+
+.
+.
+.
+
+ls -dl /etc
+
+.
+.
+.
+ls -l /etc > /retest/a
+
+head -7 /etc/passwd
+
+
+head -7 /etc/passwd > /retest/b
+
+tail -4 /etc/inittab > /retest/c
+
+cd /retest
+
+cat a b c > /retest/d
+
+////////////////////////////////
+
+생활코딩 웹사이트.... 간단한걸 배울수 있다...
+
+tcpschool /// 
+
+
+///////////////리눅스 권한을 대해 배워보자/////////////
+
+파일 /디렉토리			|------------  소유권 : 허가권 부여할 수 있는 권한
+ (소유물) 권한---------------------	               - 사용자 계정 / 그룹계정 / 시스템 계정
+				|			
+	- 권력	  한계           |
+	   힘 	  범위           |------------ 허가권 : 자원에 대한 접근 범위 제한
+	  소유						-
+
+
+----------------------------------------------------------
+	r(read)	 	: 읽기
+
+	w(write)	: 쓰기
+
+	x(Execute)	: 실행
+
+
+ls -l /etc 쳐서  맨밑에줄 복사
+
+		소유권
+drwxr-xr-x.  2 root root      220 10월  2  2020 yum.repos.d
+ -----         ----.----
+  허가권	    사용자계정. 그룹계정
+
+
+drwxr-xr-x.을  해석하면
+            
+drwx : 소유자 계정 /r-x : 그룹 계정 / : r-x : 나머지 계정
+
+
+문자형		r	w	x
+
+숫자형		4	2	1
+
+	rwxr_xr_x =  755
+	r__r_x__x =  451
+	r_x_wx__x =  531
+		
+	123 = __x_w__wx
+	567 = r_xrw_rwx
+	153 = 
+
+문제예시 
+
+	rw_r_xr__ = 545  654
+	rwxr__r_x = 745  745
+	r__rwxr__ = 474  474
+	r_xr__r_x = 545  545
+	r__r_x___ = 450  450
+
+	755 = rwx_rxr_x  rwxr_xr_x
+	644 = r_w__r__r  rw_r__r__
+	701 = rwx___x__  rwx_____x
+	542 = r_x__r__w  r_xr__rw_
+	643 = r_w__r_wx  rw_r___wx
+	375 = w_xrwx_rx  _wxrwxr_x
+
+
+
+----------------------------------------------------------
+
+	일반파일				디렉토리
+
+	r : cat, head, tail, more	r : ls
+
+	(내용읽기)				(목록보기)
+
+	w : >, vi			w : touch, cp, mv, rm.... 
+	
+	(내용수정)				(생성, 수정, 삭제)
+	
+
+	x : ./filename			x : cd
+	(실행파일)				(진입권한)
+
+
+----------------------------------------------------------
+권한부여 하는 방법
+
+[root@localhost retest]# mkdir -p /chown/a
+[root@localhost retest]# thouch /chown/b /chown/c
+bash: thouch: 명령을 찾을 수 없습니다...
+[root@localhost retest]# touch /chown/b /chown/c  잘못침
+
+[root@localhost retest]# touch /chown/b /chown/a/c
+
+[root@localhost retest]# cd /chown/
+[root@localhost chown]# pwd
+/chown
+
+////////////////////////////////////////유저 10번을 만들고 확인한다
+
+[root@localhost chown]# useradd user10 ///////////////////////////////////////////////////유저 만드는법
+
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 root root 33  9월 29 10:27 /chown
+
+//////////////////////////////// 유저10번에게 권한을 주고 확인한뒤  다시 root로 바꿔본다.
+
+[root@localhost chown]# chown user10:user10 /chown
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 user10 user10 33  9월 29 10:27 /chown
+
+[root@localhost chown]# chown root.root /chown
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 root root 33  9월 29 10:27 /chown
+
+///////////////////////////////////////////////////
+
+[root@localhost chown]# chown user10 /chown
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 user10 root 33  9월 29 10:27 /chown
+
+[root@localhost chown]# chown root.root /chown
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 root root 33  9월 29 10:27 /chown
+
+////////////////////////////////
+
+[root@localhost chown]# chown :user10 /chown
+[root@localhost chown]# ls -ld /chown
+drwxr-xr-x. 3 root user10 33  9월 29 10:27 /chown
+
+////////////////////////////////////////////////
+
+[root@localhost chown]# ls -l /chown
+합계 0
+drwxr-xr-x. 2 root root 6  9월 29 10:27 a
+-rw-r--r--. 1 root root 0  9월 29 10:27 b
+-rw-r--r--. 1 root root 0  9월 29 10:27 c
+
+
+///////////////////////////////////////////권한 주기  실행 하는 법
+
+[root@localhost chown]# mkdir /perm
+[root@localhost chown]# ls -l /perm
+합계 0
+
+[root@localhost chown]# chmod 000 /perm
+[root@localhost chown]# ls -ld /perm
+d---------. 2 root root 6  9월 29 10:42 /perm
+
+[root@localhost chown]# chmod u+r /perm
+[root@localhost chown]# ls -ld /perm
+dr--------. 2 root root 6  9월 29 10:42 /perm
+
+
+[root@localhost chown]# chmod g+wx /perm
+[root@localhost chown]# ls -ld /perm
+dr---wx---. 2 root root 6  9월 29 10:42 /perm
+
+
+[root@localhost chown]# chmod o+rx /perm
+[root@localhost chown]# ls -ld /perm
+dr---wxr-x. 2 root root 6  9월 29 10:42 /perm
+
+
+[root@localhost chown]# chmod u-r,g-wx,o-rx /perm
+[root@localhost chown]# ls -ld /perm
+d---------. 2 root root 6  9월 29 10:42 /perm
+
+
+[root@localhost chown]# chmod a+rx /perm
+[root@localhost chown]# ls -ld /perm
+dr-xr-xr-x. 2 root root 6  9월 29 10:42 /perm
+
+
+///////////////////
+
+[root@localhost chown]# chmod u=w /perm
+[root@localhost chown]# ls -ld /perm
+d-w-r-xr-x. 2 root root 6  9월 29 10:42 /perm
+
+[root@localhost chown]# chmod a= /perm
+[root@localhost chown]# ls -ld /perm
+d---------. 2 root root 6  9월 29 10:42 /perm
+
+////////////////////////////////////////////////숫자형으로도  줄수 있따.
+
+[root@localhost chown]# chmod 755 /perm
+[root@localhost chown]# ls -ld /perm
+drwxr-xr-x. 2 root root 6  9월 29 10:42 /perm
+
+[root@localhost chown]# chmod 456 /perm
+[root@localhost chown]# ls -ld /perm
+dr--r-xrw-. 2 root root 6  9월 29 10:42 /perm
+
+///////////////////////////////////////////////
+
+[root@localhost chown]# chmod 750 /perm
+[root@localhost chown]# ls -ld /perm
+drwxr-x---. 2 root root 6  9월 29 10:42 /perm
+
+[root@localhost chown]# chown user10:user20 /perm
+[root@localhost chown]# ls -ld /perm
+drwxr-x---. 2 user10 user20 6  9월 29 10:42 /perm
+
+////////////////////////////////유저 10번은 디렉토리 안에 들어갈수있다. 유저20번을 포함한 계정은 디렉토리들어가서 볼수있지만 만들수 없다. 
+
+[root@localhost perm]# rm -rf ./* (현재 디렉토리에 있는 모든 파일을 삭제한다)
+
+
+//////////////////////////////////////////////////////////////////권한 주기 각 user10,20,30에게  
+///////////////////////////////// root//////////////////////////////////////////코드
+[root@localhost perm]# rm -rf ./*
+[root@localhost perm]# ls -l
+합계 0
+[root@localhost perm]# ^C
+[root@localhost perm]#
+[root@localhost perm]# chmod 555 /perm
+[root@localhost perm]# cat > testfile
+
+^C
+^C
+[root@localhost perm]# ls -l
+합계 4
+-rw-r--r--. 1 root root 4  9월 29 11:11 testfile
+[root@localhost perm]# chown user10:user20 testfile
+[root@localhost perm]# ls -l
+합계 4
+-rw-r--r--. 1 user10 user20 4  9월 29 11:11 testfile
+[root@localhost perm]# chmod o-r testfile
+[root@localhost perm]# ls -l
+합계 4
+-rw-r-----. 1 user10 user20 4  9월 29 11:11 testfile
+[root@localhost perm]# chmod o+r testfile
+[root@localhost perm]# cat > testfile
+This is file
+^C
+[root@localhost perm]# chmod g+w /perm
+[root@localhost perm]# chmod g+w /testfile
+chmod: cannot access `/testfile': 그런 파일이나 디렉터리가 없습니다
+[root@localhost perm]# chmod g+w testfile
+[root@localhost perm]# chmod o+r testfile
+[root@localhost perm]# chmod g+w testfile
+[root@localhost perm]#
+
+
+//////////////////////////////////////////////user10 코드/////////////////////
+[user10@localhost ~]$ cd /prem
+-bash: cd: /prem: 그런 파일이나 디렉터리가 없습니다
+[user10@localhost ~]$ cd /perm
+[user10@localhost perm]$ pwd
+/perm
+[user10@localhost perm]$ chmod 0+x /perm
+chmod: invalid mode: `0+x'
+Try 'chmod --help' for more information.
+[user10@localhost perm]$ chmod o+x /perm
+[user10@localhost perm]$ ls -l /perm
+합계 0
+[user10@localhost perm]$ chmod o+r /perm
+[user10@localhost perm]$
+[user10@localhost perm]$ touch u10file
+[user10@localhost perm]$ chmod g+w /perm
+[user10@localhost perm]$ cat /perm/testfile
+
+^C
+[user10@localhost perm]$ cat /perm/testfile
+
+^C
+[user10@localhost perm]$ cat >> /perm/testfile
+user10
+^C
+[user10@localhost perm]$ cat /perm/testfile
+This is file
+user10
+[user10@localhost perm]$
+
+////////////////////////////////////////////////user20 코드/////////////////////
+[user20@localhost ~]$ cd /perm
+[user20@localhost perm]$ pwd
+/perm
+[user20@localhost perm]$ ls -l /perm
+합계 0
+[user20@localhost perm]$ touch u20file
+touch: cannot touch `u20file': 허가 거부
+[user20@localhost perm]$ touch u20file
+[user20@localhost perm]$ cat /perm/testfile
+
+^C
+[user20@localhost perm]$ cat >> /perm/testfile
+-bash: /perm/testfile: 허가 거부
+[user20@localhost perm]$ cat >> /perm/testfile
+-bash: /perm/testfile: 허가 거부
+[user20@localhost perm]$ cat >> /perm/testfile
+babo^C
+[user20@localhost perm]$ cat /perm/testfile
+This is file
+user10
+[user20@localhost perm]$ cat >> /perm/testfile
+babo
+^C
+[user20@localhost perm]$ cat /perm/testfile
+This is file
+user10
+babo
+[user20@localhost perm]$ cat >> /perm/testfile
+어렵다!!!!  리눅스
+^C
+[user20@localhost perm]$ cat /perm/testfile
+This is file
+user10
+babo
+어렵다!!!!  리눅스
+[user20@localhost perm]$ cat >> /perm/testfile
+ㅗ이게 먼가요!!!!!!!!!!!!!!!
+^C
+[user20@localhost perm]$ cat /perm/testfile
+This is file
+user10
+babo
+어렵다!!!!  리눅스
+이게 먼가요!!!!!!!!!!!!!!!
+[user20@localhost perm]$
+
+////////////////////////////////////////////////////user30코드////////////////////////////////
+[user30@localhost ~]$ cd /perm
+-bash: cd: /perm: 허가 거부
+[user30@localhost ~]$ cd /perm
+[user30@localhost perm]$ pwd
+/perm
+[user30@localhost perm]$ ls -l /perm
+ls: cannot open directory /perm: 허가 거부
+[user30@localhost perm]$ ls -l /perm
+합계 0
+[user30@localhost perm]$ cat /perm/testfile
+cat: /perm/testfile: 허가 거부
+[user30@localhost perm]$ cat /perm/testfile
+
+^C
+[user30@localhost perm]$ cat /perm/testfile
+This is file
+[user30@localhost perm]$ cat /perm/testfile
+This is file
+user10
+babo
+어렵다!!!!  리눅스
+이게 먼가요!!!!!!!!!!!!!!!
+[user30@localhost perm]$ cat >> /perm/testfile
+-bash: /perm/testfile: 허가 거부
+[user30@localhost perm]$ cat /perm/testfile
+This is file
+user10
+babo
+어렵다!!!!  리눅스
+이게 먼가요!!!!!!!!!!!!!!!
+[user30@localhost perm]$
+
+
+
+
+
+
+
+
+리눅스 권한 문제 3 파일중  내부평가 나옴!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+1~2 / 3~4 / 각 한문제라고 보면됨
+
+
+
+문제 풀이!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-
+
+
+
+
+
+
